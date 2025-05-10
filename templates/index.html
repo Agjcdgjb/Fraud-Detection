@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>詐騙圖片檢測系統</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="icon" type="image/svg+xml" href="{{ url_for('static', filename='images/favicon.svg') }}">
+    <meta name="description" content="使用 AI 技術檢測詐騙圖片，保護您的安全">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>詐騙圖片檢測系統</h1>
+            <p class="subtitle">使用 AI 技術，快速識別可疑圖片</p>
+        </header>
+
+        <main>
+            <div class="upload-container">
+                <div class="upload-area" id="dropZone">
+                    <input type="file" id="fileInput" accept="image/*" hidden>
+                    <div class="upload-content">
+                        <img src="{{ url_for('static', filename='images/upload-icon.svg') }}" alt="上傳圖示" class="upload-icon">
+                        <p class="upload-text">點擊或拖曳圖片至此處</p>
+                        <p class="upload-hint">支援 JPG、PNG 格式，檔案大小限制 16MB</p>
+                    </div>
+                </div>
+                <div class="preview-container" id="previewContainer" style="display: none;">
+                    <img id="previewImage" src="" alt="預覽圖片">
+                    <div class="preview-actions">
+                        <button class="remove-btn" id="removeBtn">
+                            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M12 4L4 12M4 4L12 12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                            </svg>
+                            移除圖片
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="result-container" id="resultContainer" style="display: none;">
+                <h2>檢測結果</h2>
+                <div class="result-content">
+                    <p>
+                        <span class="result-label">類別：</span>
+                        <span id="resultClass" class="result-value"></span>
+                    </p>
+                    <p>
+                        <span class="result-label">可信度：</span>
+                        <span id="resultConfidence" class="result-value"></span>
+                    </p>
+                </div>
+            </div>
+
+            <div class="loading" id="loading" style="display: none;">
+                <div class="spinner"></div>
+                <p>正在分析圖片...</p>
+            </div>
+        </main>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html> 
