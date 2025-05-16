@@ -11,8 +11,8 @@ import tempfile
 
 app = Flask(__name__)
 
-# 修改上傳資料夾路徑為絕對路徑
-app.config['UPLOAD_FOLDER'] = os.path.join(os.path.expanduser('~'), 'fraud-detection', 'uploads')
+# 修改上傳資料夾路徑為 Heroku 的臨時目錄
+app.config['UPLOAD_FOLDER'] = os.path.join(tempfile.gettempdir(), 'uploads')
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16MB max-limit
 
 # 確保上傳資料夾存在
@@ -29,11 +29,10 @@ def download_from_drive(file_id, output_path):
 
 # 取得模型與類別映射的本地路徑（自動下載）
 def get_model_and_mapping():
-    # 在 PythonAnywhere 中使用固定的模型路徑
-    model_dir = os.path.join(os.path.expanduser('~'), 'fraud-detection', 'models')
-    os.makedirs(model_dir, exist_ok=True)
-    model_path = os.path.join(model_dir, 'best_model.pth')
-    class_mapping_path = os.path.join(model_dir, 'class_mapping.pth')
+    # 在 Heroku 中使用臨時目錄
+    temp_dir = tempfile.gettempdir()
+    model_path = os.path.join(temp_dir, 'best_model.pth')
+    class_mapping_path = os.path.join(temp_dir, 'class_mapping.pth')
     download_from_drive(MODEL_FILE_ID, model_path)
     download_from_drive(CLASS_MAPPING_FILE_ID, class_mapping_path)
     return model_path, class_mapping_path
@@ -108,7 +107,6 @@ def predict():
         else:
             return jsonify({'error': '預測失敗'}), 500
 
-# 修改為使用環境變數中的端口
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))
     app.run(host='0.0.0.0', port=port) 
