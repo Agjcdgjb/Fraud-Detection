@@ -27,14 +27,10 @@ def download_from_drive(file_id, output_path):
     if not os.path.exists(output_path):
         gdown.download(url, output_path, quiet=False)
 
-# 取得模型與類別映射的本地路徑（自動下載）
+# 取得模型與類別映射的本地路徑（直接讀取 models 資料夾）
 def get_model_and_mapping():
-    # 在 Heroku 中使用臨時目錄
-    temp_dir = tempfile.gettempdir()
-    model_path = os.path.join(temp_dir, 'best_model.pth')
-    class_mapping_path = os.path.join(temp_dir, 'class_mapping.pth')
-    download_from_drive(MODEL_FILE_ID, model_path)
-    download_from_drive(CLASS_MAPPING_FILE_ID, class_mapping_path)
+    model_path = os.path.join('models', 'best_model.pth')
+    class_mapping_path = os.path.join('models', 'class_mapping.pth')
     return model_path, class_mapping_path
 
 # 設置日誌
