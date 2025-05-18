@@ -76,14 +76,47 @@ def predict_image(image_path):
             probabilities = torch.nn.functional.softmax(outputs, dim=1)
             predicted_class = torch.argmax(probabilities, dim=1).item()
             confidence = probabilities[0][predicted_class].item()
+        
+        # 根據類別和可信度生成分析說明
+        analysis = generate_analysis(class_mapping[predicted_class], confidence)
+        
         result = {
             'class': class_mapping[predicted_class],
-            'confidence': f"{confidence * 100:.2f}%"
+            'confidence': f"{confidence * 100:.2f}%",
+            'analysis': analysis
         }
         return result
     except Exception as e:
         logger.error(f"預測時發生錯誤: {str(e)}")
         return None
+
+def generate_analysis(class_name, confidence):
+    """根據類別和可信度生成分析說明"""
+    confidence_level = "高" if confidence >= 0.8 else "中" if confidence >= 0.5 else "低"
+    
+    analysis_templates = {
+        "詐騙": {
+            "高": "此圖片具有明顯的詐騙特徵，包含可疑的視覺元素和設計模式。建議立即停止與該來源的互動。",
+            "中": "此圖片顯示出一些可疑的詐騙特徵，建議謹慎處理並進一步驗證其真實性。",
+            "低": "此圖片可能包含一些可疑元素，但需要進一步確認。建議保持警惕。"
+        },
+        "正常": {
+            "高": "此圖片顯示為正常的商業或個人用途，沒有發現可疑的詐騙特徵。",
+            "中": "此圖片看起來是正常的，但仍建議保持基本的警惕性。",
+            "低": "此圖片可能為正常用途，但建議進行額外的驗證。"
+        }
+    }
+
+    # 品牌類別的通用說明
+    if class_name not in analysis_templates:
+        if confidence_level == "高":
+            return f"此圖片高度疑似與「{class_name}」品牌相關，若非官方來源，請提高警覺，避免輸入個人資料或點擊可疑連結。"
+        elif confidence_level == "中":
+            return f"此圖片與「{class_name}」品牌有一定關聯性，建議確認來源真實性，避免受騙。"
+        else:
+            return f"此圖片可能與「{class_name}」品牌有關，可信度較低，請保持警惕。"
+    
+    return analysis_templates.get(class_name, {}).get(confidence_level, "無法生成分析說明。")
 
 @app.route('/')
 def index():

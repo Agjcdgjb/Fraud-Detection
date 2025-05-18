@@ -228,4 +228,30 @@ h1 {
     .result-content p {
         font-size: 1rem;
     }
+}
+
+.result-value {
+    font-weight: 500;
+    color: var(--text-primary);
+}
+
+#resultAnalysis {
+    display: block;
+    margin-top: 0.5rem;
+    padding: 1rem;
+    background-color: rgba(37, 99, 235, 0.05);
+    border-radius: 0.5rem;
+    line-height: 1.6;
+}
+
+.high-confidence #resultAnalysis {
+    background-color: rgba(5, 150, 105, 0.05);
+}
+
+.medium-confidence #resultAnalysis {
+    background-color: rgba(217, 119, 6, 0.05);
+}
+
+.low-confidence #resultAnalysis {
+    background-color: rgba(220, 38, 38, 0.05);
 } 

@@ -8,6 +8,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const loading = document.getElementById('loading');
     const resultClass = document.getElementById('resultClass');
     const resultConfidence = document.getElementById('resultConfidence');
+    const resultAnalysis = document.getElementById('resultAnalysis');
 
     // 點擊上傳區域觸發檔案選擇
     dropZone.addEventListener('click', () => fileInput.click());
@@ -69,7 +70,7 @@ document.addEventListener('DOMContentLoaded', function() {
             previewImage.src = e.target.result;
             previewContainer.style.display = 'block';
             resultContainer.style.display = 'none';
-            dropZone.style.display = 'none';
+            // dropZone.style.display = 'none'; // 不再隱藏 dropZone
         };
         reader.readAsDataURL(file);
 
@@ -104,6 +105,7 @@ document.addEventListener('DOMContentLoaded', function() {
             // 顯示結果
             resultClass.textContent = data.class;
             resultConfidence.textContent = data.confidence;
+            resultAnalysis.textContent = data.analysis;
             resultContainer.style.display = 'block';
             
             // 根據結果添加不同的樣式
