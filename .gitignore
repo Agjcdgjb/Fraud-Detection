@@ -40,7 +40,7 @@ Thumbs.db
 # Project specific
 uploads/
 *.log
-*.pth
+
 *.pt
 *.ckpt
 *.h5

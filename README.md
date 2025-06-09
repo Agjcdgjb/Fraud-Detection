@@ -26,12 +26,19 @@ git clone [專案網址]
 cd [專案目錄]
 ```
 
-2. 安裝依賴套件：
+2. 建立並啟動虛擬環境：
+```bash
+python -m venv venv
+source venv/bin/activate  # Linux/Mac
+venv\Scripts\activate     # Windows
+```
+
+3. 安裝依賴套件：
 ```bash
 pip install -r requirements.txt
 ```
 
-3. 確保模型檔案存在：
+4. 確保模型檔案存在：
 - 將訓練好的模型檔案放在 `models/best_model.pth`
 - 將類別映射檔案放在 `models/class_mapping.pth`
 
@@ -55,68 +62,41 @@ http://localhost:5000
 - 系統會自動分析圖片
 - 顯示檢測結果和可信度
 
-## 數據來源與處理
-
-### 數據來源
-本系統使用的訓練數據來自以下來源：
-- PhishIRIS 資料集：包含多個品牌的釣魚網站圖片
-- 公開的詐騙網站圖片資料庫
-- 真實的詐騙案例圖片
-- 正常網站圖片作為對照組
-
-### 數據處理流程
-1. 數據收集與整理
-   - 從多個來源收集詐騙網站圖片
-   - 收集對應的正常網站圖片作為對照
-   - 建立標註資料集
-
-2. 數據預處理
-   - 圖片大小統一調整為 224x224 像素
-   - 進行圖片增強（Image Augmentation）：
-     * 隨機水平翻轉
-     * 隨機旋轉（±15度）
-     * 亮度、對比度調整
-     * 隨機裁剪
-   - 標準化處理：使用 ImageNet 的均值和標準差
-
-3. 數據集劃分
-   - 訓練集：70%
-   - 驗證集：15%
-   - 測試集：15%
-
-4. 類別平衡
-   - 使用過採樣技術處理類別不平衡問題
-   - 確保每個類別有足夠的訓練樣本
-
 ## 專案結構
 
 ```
 ├── app.py              # Flask 應用程式主檔案
-├── models/             # 模型檔案目錄
-│   ├── best_model.pth  # 訓練好的模型
+├── train.py           # 模型訓練腳本
+├── models/            # 模型檔案目錄
+│   ├── best_model.pth # 訓練好的模型
 │   └── class_mapping.pth # 類別映射檔案
-├── static/            # 靜態檔案目錄
-│   ├── css/          # CSS 樣式檔案
-│   ├── js/           # JavaScript 檔案
-│   └── images/       # 圖片資源
-├── templates/         # HTML 模板目錄
-├── uploads/          # 上傳檔案暫存目錄
-└── requirements.txt   # 依賴套件清單
+├── static/           # 靜態檔案目錄
+│   ├── css/         # CSS 樣式檔案
+│   ├── js/          # JavaScript 檔案
+│   └── images/      # 圖片資源
+├── templates/        # HTML 模板目錄
+├── data/            # 訓練數據目錄
+├── uploads/         # 上傳檔案暫存目錄
+├── venv/            # Python 虛擬環境
+└── requirements.txt  # 依賴套件清單
 ```
 
 ## 技術架構
 
-- 後端：Flask
+- 後端：Flask 2.2.0+
 - 前端：HTML5、CSS3、JavaScript
-- 深度學習：PyTorch
+- 深度學習：PyTorch 2.0.1
 - 模型架構：EfficientNet-B3
-- 圖片處理：Pillow
+- 圖片處理：Pillow 9.0.0+
+- 其他依賴：
+  * timm 0.5.4（模型架構）
+  * scikit-learn 0.24.0+（數據處理）
+  * beautifulsoup4（網頁解析）
 
 ## 注意事項
 
 - 上傳圖片大小限制為 16MB
 - 支援的圖片格式：JPG、PNG
 - 建議使用支援 CUDA 的 GPU 以獲得更好的效能
-- 模型訓練數據會定期更新以保持準確性
 - 系統會自動記錄檢測結果以改進模型效能
-
+- 建議定期更新依賴套件以修復安全漏洞
